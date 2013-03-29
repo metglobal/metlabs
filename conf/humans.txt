@@ -1,0 +1,9 @@
+/* humanstxt.org */
+
+/* TEAM */
+  Name: Team
+  Site: http://labs.example.com
+  Location: Turkey/Istanbul
+
+
+

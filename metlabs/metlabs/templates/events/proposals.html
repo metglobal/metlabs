@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="content">
+        <form class="proposal-form"
+              action="{% url "events_send_proposal" session.event.slug session.pk %}"
+              method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Gönder">
+        </form>
+    </section>
+{% endblock %}

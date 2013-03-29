@@ -1,0 +1,60 @@
+/* desert scheme ported from vim to google prettify */
+pre.prettyprint {
+    display: block;
+    font-size: 15px;
+    line-height: 25px;
+    padding: 20px;
+    margin-left: -32px;
+    margin-right: -38px;
+    border: none;
+    font-weight: normal;
+    color: #f4f8ff;
+    background-color: #464347;
+    box-shadow: 0 0 3px #8e8e8e;
+}
+pre code {
+    background-color: #464347 !important;
+    font-family: "source-code-pro", monospace !important;
+}
+.prettyprint .pln {
+    color: inherit;
+}
+
+.prettyprint .str,
+.prettyprint .lit,
+.prettyprint .atv {
+    color: #f095ef;
+}
+
+.prettyprint .kwd {
+    color: #46c1ff;
+}
+
+.prettyprint .com,
+.prettyprint .dec {
+    color: #a8a9b2;
+}
+
+.prettyprint .typ {
+    color: #e6cd04;
+}
+
+.prettyprint .pun {
+    color: inherit;
+}
+
+.prettyprint .opn {
+    color: inherit;
+}
+
+.prettyprint .clo {
+    color: inherit;
+}
+
+.prettyprint .tag {
+    color: #2b9dee;
+}
+
+.prettyprint .atn {
+    color: inherit;
+}

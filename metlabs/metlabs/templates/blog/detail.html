@@ -1,0 +1,9 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <section class="content blog">
+        {% include "blog/post.html" with show_comments=True show_share_buttons=True show_author=True show_full=True %}
+    </section>
+{% endblock %}

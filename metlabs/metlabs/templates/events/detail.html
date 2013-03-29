@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% load typogrify_tags %}
+
+{% block title %}Labsessions: {{ event.title }}{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <section class="event">
+            <aside>
+                <time>Labsessions: {{ event.date|date:"d F" }}</time>
+            </aside>
+            <h2>{{ event.title|typogrify }}</h2>
+            <h3 class="countdown">
+                Etkinliğe {{ event.date|timeuntil }} kaldı.
+            </h3>
+            {{ event.content }}
+            <p class="info"><strong>Etkinlik Tarihi</strong> {{ event.date|date }}</p>
+            <p class="info">
+                <strong>Adres</strong>
+                <span>{{ event.address|widont }}
+                {% if event.coordinates %}
+                    <a class="scroll" href="#venue">(harita'da görmek için tıklayın)</a>{% endif %}
+                </span>
+            </p>
+            <p class="info"><strong>Katılım / Kontenjan</strong>
+                {{ event.attendees.count }} / {{ event.max_participants }} </p>
+        </section>
+        <section class="schedule">
+            <h2>Etkinlik Programı</h2>
+
+            <table>
+                {% for session in event.sessions.all %}
+                <tr>
+                    <td class="hours">{{ session.start_time|time:"H:i" }} - {{ session.end_time|time:"H:i" }}</td>
+                    <td class="description">
+                        {% if session.is_planning %}
+                            <strong>Konuşmacı olmak ister misin?</strong>
+                            <p>{{ session.start_time|time:"H:i" }} ve {{ session.end_time|time:"H:i" }}
+                                arası henüz planlanma aşamasında. Bu saatleri
+                                eğer sen doldurmak istersen konuşmacı formunu
+                                doldurabilirsin.</p>
+                            <p>
+                                <a class="load-more"
+                                   href="{% url "events_send_proposal" event.slug session.pk %}">
+                                    Formu doldurmak için tıklayınız</a>
+                            </p>
+                            <div class="content">
+                                <form class="proposal-form"
+                                      action="{% url "events_send_proposal" event.slug session.pk %}"
+                                      method="post">
+                                    {% csrf_token %}
+                                {{ proposal_form.as_p }}
+                                    <input type="submit" value="Gönder">
+                                </form>
+                            </div>
+                        {% else %}
+
+                        <a href="#">{{ session.title }}</a>
+                        {% if session.speaker %}
+                        <p><strong>{{ session.speaker }}</strong></p>
+                        {% endif %}
+                        {% if session.description %}
+                        <p>
+                            {{ session.description }}
+                            {% if session.content.raw %}<br /><a class="load-more" href="#">Devamı için tıklayın</a>{% endif %}
+                        </p>
+                        <div class="content">
+                        {{ session.content }}
+                        </div>
+                        {% endif %}
+
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </section>
+
+
+        <section class="speakers">
+            <h2>Konuşmacılar</h2>
+            <ul>
+                {% for speaker in event.speakers %}
+                    <li class="speaker">
+                        <div class="image">
+                            <img src="{{ speaker.image.url }}" alt="{{ speaker.full_name }}">
+                        </div>
+                        <div class="biography">
+                            <h3>{{ speaker.full_name }}</h3>
+                            <ul class="links">
+                                <li><a href="https://twitter.com/{{ speaker.twitter_username }}">Twitter</a></li>
+                                <li><a href="https://github.com/{{ speaker.github_username }}">Github</a></li>
+                                <li><a href="{{ speaker.blog_url }}">Kişisel Blog</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        {% if event.coordinates %}
+        <section class="map" id="venue">
+            <h2>Nasıl ulaşırım</h2>
+            <p>{{ event.address }}</p>
+            <div id="map"></div>
+        </section>
+        {% endif %}
+
+        <section class="registration">
+            <h2>Bu etkinlik için yerinizi ayırtın </h2>
+            {{ form.non_field_errors }}
+            <form action="{% url "events_detail" event.slug %}" method="post">
+                {% csrf_token %}
+                <p {% if form.email.errors %}class="error" {% endif %}>
+                    <label for="id_email">Email:</label>
+                    {{ form.email }}
+                </p>
+                <div class="column">
+                    <p {% if form.first_name.errors %}class="error"{% endif %}>
+                        <label for="id_first_name">Ad:</label>
+                        {{ form.first_name }}
+                    </p>
+                </div>
+                <div class="column">
+                    <p {% if form.last_name.errors %}class="error"{% endif %}>
+                        <label for="id_last_name">Soyad:</label>
+                        {{ form.last_name }}
+                    </p>
+                </div>
+                <p {% if form.telephone.errors %}class="error"{% endif %}>
+                    <label for="id_telephone">Telefon:</label>
+                    {{ form.telephone }}
+                </p>
+
+                <input type="submit" id="submit" value="Gönder">
+            </form>
+        </section>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script type="text/javascript">
+       $(function () {
+           var coordinates =  new google.maps.LatLng({{ event.coordinates }});
+           var map = new google.maps.Map(document.getElementById('map'), {
+               zoom: 15,
+               center: coordinates,
+               mapTypeId: google.maps.MapTypeId.ROADMAP,
+               scrollwheel: false
+           });
+
+           var marker = new google.maps.Marker({
+               position: coordinates,
+               map: map,
+               title: '{{ event.title }}'
+           });
+           $(".load-more").click(function () {
+               $(this).hide().parents('td').find('.content').toggle();
+               return false;
+           });
+
+           $('a.scroll').click(function() {
+               var scroll_to = $(this).attr("href");
+               var destination = $(scroll_to).offset().top;
+               $("html:not(:animated),body:not(:animated)").animate(
+                       { scrollTop: destination-15}, 500 );
+               return false;
+           });
+
+       });
+    </script>
+{% endblock %}

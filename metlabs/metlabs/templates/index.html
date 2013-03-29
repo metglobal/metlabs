@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% load tz %}
+
+{% block content %}
+    <section class="content info">
+        <p>Biz Metglobal Labs olarak açık kaynak topluluğu için projeler ve içerikler
+            üretip onları paylaşıyoruz. Ayrıca her ay labsessions adı altında
+        çeşitli etkinlikler düzenlemekte ve bunların duyurusunu yapmaktayız.</p>
+    </section>
+<section class="content">
+    <section class="event-preview">
+        <h2>Labsessions'ta Önümüzdeki Ay</h2>
+        {% with future_events|first as event %}
+        <h3><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h3>
+        <p>{{ event.description }}</p>
+        <time datetime="{{ event.date|utc }}">{{ event.date|date:"j N l, Y" }}</time>
+        {% endwith %}
+    </section>
+</section>
+<section class="content latest-posts">
+    <h2>Son Blog Yazıları</h2>
+    <ul>
+        {% for post in latest_posts %}
+            <li><time><a href="{{ post.get_absolute_url }}">{{ post.date_created|date }}</a></time>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+        {% endfor %}
+
+    </ul>
+</section>
+<section class="content">
+    <h2>Açık Kaynak</h2>
+    <section class="projects">
+        <p>Projelerimizde çeşitli açık kaynak teknolojileri kullanmaktayız. Açık kaynağı seviyoruz ve ona destek
+            vermeye çalışıyoruz. Kendi geliştirdiğimiz yeniden kullanılabilir modülleri paylaştığımız bir github
+            organizasyonumuz mevcut.</p>
+    </section>
+    <section class="project-list">
+        <ul>
+            <li>
+                <em style="background-color: #9fdfe5">o</em>
+                <div class="info">
+                    <a href="https://github.com/metglobal/octavious">octavious</a>
+                    <p>Octavious ağır işlerinizi paralelleştirmeye olanak tanıyan
+                        hafif bir multi-processing framework'üdür.</p>
+                </div>
+            </li>
+
+            <li>
+                <em style="background-color: #f8d9b8;">k</em>
+                <div class="info">
+                    <a href="https://github.com/metglobal/korpus">korpus</a>
+                    <p>Korpus tf-idf algoritmasını kullanan benzer metinleri
+                    bulma aracıdır.</p>
+                </div>
+            </li>
+
+            <li>
+                <em style="background-color: #BDECB6;">e</em>
+                <div class="info">
+                    <a href="https://github.com/metglobal/django-exchange">django-exchange</a>
+                    <p>Django içerisinde para birimleri tutmayı ve döviz kurlarını birbirine
+                        dönüştürmeyi sağlayan bir django uygulamasıdır.</p>
+                </div>
+            </li>
+
+            <li>
+                <em style="background-color: #c8c5f6;">e</em>
+                <div class="info">
+                    <a href="http://github.com/metglobal/openexchangerates">openexchangerates</a>
+                    <p>Openexchangerates API'ı için bir Python istemcisidir.</p>
+                </div>
+            </li>
+
+            <li>
+                <em style="background-color: #fdcdf2;">b</em>
+                <div class="info">
+                    <a href="http://github.com/metglobal/bookingcom">bookingcom</a>
+                    <p>Booking.com API'ı için bir Python istemcisidir.</p>
+                </div>
+            </li>
+
+        </ul>
+    </section>
+</section>
+{% endblock %}

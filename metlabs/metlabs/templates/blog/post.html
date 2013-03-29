@@ -1,0 +1,53 @@
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+    <aside><time datetime="{{ post.date_created }}">{{ post.date_created|date }}</time></aside>
+    <header>
+        <h3><a itemprop="url" href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+    </header>
+    <section itemprop="articleBody">
+        {% if show_full %}
+        {{ post.content }}
+        {% else %}
+        {{ post.get_description }}
+            <a class="load-more" href="{{ post.get_absolute_url }}">Devamını göster</a>
+        {% endif %}
+    </section>
+
+    {% if show_author %}
+    <section class="author">
+        <div class="image">
+            <img src="{{ post.author.image.url }}" alt="{{ post.author.full_name }}">
+        </div>
+        <div class="biography">
+            <h3>{{ post.author.full_name }}</h3>
+            <p>{{ post.author.short_bio }}</p>
+            <ul class="links">
+                <li><a href="https://twitter.com/{{ post.author.twitter_username }}">Twitter</a></li>
+                <li><a href="https://github.com/{{ post.author.github_username }}">Github</a></li>
+                <li><a href="{{ post.author.blog_url }}">Kişisel Blog</a></li>
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+    {% if show_share_buttons %}
+    <section class="share">
+        <p>Yazıyı beğendiyseniz sosyal medyada paylaşabilirsiniz.</p>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="{{ post.author.twitter_username }}" data-size="large">Tweet</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </section>
+    {% endif %}
+    {% if show_comments %}
+    <section class="comments">
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            var disqus_shortname = 'metlabs';
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </section>
+    {% endif %}
+</article>

@@ -1,0 +1,16 @@
+*.py[c,o]
+*~
+\#*\#
+\.\#*
+django
+settings_local.py
+*.db
+.DS_Store
+__MACOSX
+.vagrant
+db.sqlite
+manifests/build
+logs/
+metlabs/metlabs/static/files/
+metlabs/metlabs/static/markitup
+metlabs/metlabs/static/admin
